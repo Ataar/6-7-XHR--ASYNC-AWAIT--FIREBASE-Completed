@@ -222,6 +222,7 @@ const onUpdate = async ()=>{
     
   }
   cl(getUpdateObj)
+  userData.reset()
   snackBar("Updated Successfully", "✏️", "#e9376c");
 
   subTupBtn(sBtn, true)
