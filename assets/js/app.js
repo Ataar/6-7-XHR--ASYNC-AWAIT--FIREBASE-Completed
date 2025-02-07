@@ -1,327 +1,44 @@
-let cl = console.log;
 
-const userData = document.getElementById("userData");
-const title = document.getElementById("title");
-const body = document.getElementById("body");
-const userId = document.getElementById("userId");
-const sBtn = document.getElementById("sBtn");
-const uBtn = document.getElementById("uBtn");
-const dataContainer = document.getElementById("dataContainer");
-const loader = document.getElementById("loader");
+const showTable = (number) => {
+  const tableOutput = document.getElementById('tableOutput');
+  tableOutput.innerHTML = ''; // Clear previous table
 
-const Base_Url = `https://xhr--http---promise---firebase-default-rtdb.firebaseio.com/`;
-const Post_Url = `${Base_Url}/posts.json`;
-
-const snackBar = (title, iconHtml, bgColor = "#439643", color = "#fff") => {
-  Swal.fire({
-    title: `<div style="display: flex; align-items: center; justify-content:center; gap: 8px;">${iconHtml} ${title}</div>`,
-    timer: 1500,
-    width: "300px",
-    padding: "0.5rem",
-    showConfirmButton: false,
-    toast: true,
-    position: "top",
-    color,
-    customClass: {
-      popup: "custom-snackbar",
-    },
-    didOpen: () => {
-      document.querySelector(".custom-snackbar").style.backgroundColor =
-        bgColor;
-    },
-  });
-};
-
-
-
-
-
-//  Function For Loader:-
-
-const Hide_Show = (element, show) => {  // element parameter represent element and show parameter represent true and false 
-
-  show ? element.classList.remove("d-none") : element.classList.add("d-none");
- // if an argument of show parameter is true then remove class otherwise add class if show parameter is flase 
-
-  // if (show) { 
-  //   element.classList.remove("d-none"); // Remove the "d-none" class → Show the element
-  // } else {
-  //   element.classList.add("d-none"); // Add the "d-none" class → Hide the element
-  // }
-  
-};
-
-
-
-
-const makeApiCall = (methodName , apiUrl , body = null)=>{  // this is genric function for API Call
-return new Promise((resolve,reject)=>{
-  Hide_Show(loader, true); // Show loader
-  let xhr = new XMLHttpRequest();
-  xhr.open(methodName , apiUrl);
-  xhr.setRequestHeader("Authorization","JWT ACCESS_TOKEN FROM_LOCAL_STORAGE");
-  xhr.setRequestHeader("Content-type","application/json");
-  xhr.onload = function()
-  {
-    Hide_Show(loader, false); // Hide loader
-     if(xhr.status>=200 && xhr.status<=299)
-     {
-        let data = JSON.parse(xhr.response);
-        resolve(data)
-     }
-
-     else
-     {
-        reject(xhr.statusText)
-        snackBar("Something went wrong", "❌", "#d33");
-     }
+  if (isNaN(number) || number <= 0) {
+      const errorParagraph = document.createElement('p');
+      errorParagraph.textContent = 'Please enter a number !';
+      errorParagraph.className = 'red';
+      errorParagraph.style.marginLeft ='-20px';
+      errorParagraph.style.width='200px'
+      errorParagraph.style.color='red'
+      tableOutput.appendChild(errorParagraph);
+      return;
   }
 
-  xhr.send(body ? JSON.stringify(body): null);
+  const table = document.createElement('table');
+  table.style.borderCollapse = 'collapse';
+  table.style.marginTop = '10px';
+  table.style.width = '100%';
 
-  xhr.onerror = function()
-  {
-    
-    
-    Hide_Show(loader, false); // Hide loader
-    reject(`Network Error`)
-    snackBar("Network Error", "❌", "#d33");
+  for (let i = 1; i <= 10; i++) {
+      const row = document.createElement('tr');
+
+      const cell = document.createElement('td');
+      cell.textContent = `${number} x ${i} = ${number * i}`;
+      cell.style.border = '1px solid #000';
+      cell.style.padding = '8px';
+      cell.style.textAlign = 'center';
+      cell.style.fontFamily = 'Tahoma';
+      cell.style.fontSize = '20px';
+      cell.style.color='white'
+
+      row.appendChild(cell);
+      table.appendChild(row);
   }
-})
-}
 
-
-makeApiCall('GET',Post_Url , null)
-
-.then(res=>{
- let data = objToarr(res)
- temp(data)
- cl(data)
-  
-})
-
-.catch(err=>{
-  cl(err)
-})
-
-
-// we call a function that retrun promise but not consume it still the API call is getting success 
-// so this behavior of promise is called Eager behavior.
-
-
-
-const objToarr = (obj)=>Object.keys(obj).map(key=>({...obj[key] , id: key}))
- 
- 
-
-
-
-
-
-const temp = (arr) => {
-  let result = "";
-  arr.forEach(add => {
-    result += `
-            
-            <div class="card" id ='${add.id}'>
-                <div class="card-header">
-                <h5>${add.title}</h5>
-                </div>
-
-                <div class="card-body">
-                <p>${add.body}</p>
-                </div>
-
-                <div class="card-footer d-flex justify-content-between">
-                    <button class="btn btn-primary" onclick='onEdit(this)'>Edit</button>
-                    <button class="btn btn-danger" onclick='onDelete(this)'>Delete</button>
-                </div>
-            </div>
-        
-        `;
-  });
-  dataContainer.innerHTML = result;
+  tableOutput.appendChild(table);
 };
 
-
-
-
-const createCard = (obj, data) => {
-  let card = document.createElement("div");
-  card.className = 'card id="${card.id}"';
-  card.id = data.name;
-  card.innerHTML = `
-           
-            <div class="card-header">
-            <h5>${obj.title}</h5>
-            </div>
-
-
-            <div class="card-body">
-            <p>${obj.body}</p>
-            </div>
-
-
-            <div class="card-footer d-flex justify-content-between">
-            <button class="btn btn-primary" onclick='onEdit(this)'>Edit</button>
-            <button class="btn btn-danger" onclick='onDelete(this)'>Delete</button>
-            </div>
-            
-    
-    `;
-  dataContainer.append(card);
-};
-
-
-
-
-
-
-
-
-
-const sendObjToDB = (eve)=>{
-  eve.preventDefault();
-
-  let newObj = 
-  {
-     title: title.value,
-     body: body.value,
-     userId: userId.value,
-  }
-  cl(newObj)
-  userData.reset()
-
-   makeApiCall('POST' , Post_Url , newObj)
-
-   .then(res=>{
-    snackBar("Added Successfully", "✅", "#28a745");
-
-     createCard(newObj, res)
-   })
-
-   .catch(err=>{
-     cl(err)
-   })
-}
-
-
-
- // Function to hide and show the submit and update button.
-
-const submitToUpdateBtn = ((ele,show)=>{
-  show ? ele.classList.remove('d-none') : ele.classList.add('d-none')
-})
-
-
-
-
-
-const onEdit = (ele)=>{
-  let Edit_ID = ele.closest('.card').id;
-  localStorage.setItem('editId',Edit_ID);
-
-  let Edit_URL = `${Base_Url}/posts/${Edit_ID}.json`;
-
-  makeApiCall('GET',Edit_URL , null)
-
-  .then(res=>{
-     title.value = res.title;
-     body.value = res.body;
-     userId.value = res.userId;
-     submitToUpdateBtn(uBtn , true)
-     submitToUpdateBtn(sBtn , false)
-     
-    //  sBtn.classList.add('d-none');
-    //  uBtn.classList.remove('d-none');
-
-
-
-
-     const scroll = () => userData.scrollIntoView({ block: "end", behavior: "instant" });
-     scroll();
-     //  const scroll = ()=>userData.scrollIntoView()
-     //  scroll() 
-    })
-  }
-    
-  
-
-
-
-
-const onUpadte = ()=>{
-
- let updateObj = 
- {
-    title:title.value,
-    body:body.value,
-    userId:userId.value
- }
- cl(updateObj)
-
-   userData.reset()
-
- let update_ID = localStorage.getItem('editId');
- 
- let update_URL = `${Base_Url}/posts/${update_ID}.json`
- cl(update_URL)
-
- makeApiCall('PATCH', update_URL ,  updateObj)
- .then(res=>{
-
-    let data = document.getElementById(update_ID).children
-    data[0].innerHTML = ` <h5>${res.title}</h5>`;
-    data[1].innerHTML = ` <p>${res.body}</p>`;
-    submitToUpdateBtn(sBtn , true)
-    submitToUpdateBtn(uBtn , false)
-    // sBtn.classList.remove('d-none');
-    // uBtn.classList.add('d-none');
-    snackBar("Updated Successfully", "✏️", "#e9376c");
-
- })
-
- .catch(err=>{
-  cl(err)
- })
-
-}
-
-
-
-const onDelete = (ele) => {
-  let getDel_ID = ele.closest('.card').id;
-  let getDel_URL = `${Base_Url}/posts/${getDel_ID}.json`;
-
-  Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-  })
-  .then((result) => {
-    if (result.isConfirmed) {
-      makeApiCall('DELETE', getDel_URL, null)
-      .then(() => {
-          let data = ele.closest('.card');
-          data.remove();
-          snackBar("Deleted Successfully", "✅");
-        
-    })
-        .catch(error => {
-          cl(error);
-          snackBar("Something went wrong", "❌", "#d33");
-        });
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      snackBar("Action Cancelled", "ℹ️", "#334755");
-    }
-  });
-};
-
-
-userData.addEventListener('submit',sendObjToDB)
-uBtn.addEventListener('click',onUpadte)
+document.getElementById('generateTable').addEventListener('click', () => {
+  const userInput = parseInt(document.getElementById('numberInput').value, 10);
+  showTable(userInput);
+});

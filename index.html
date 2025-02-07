@@ -1,86 +1,22 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>5 - XHR - PROMISE - FIREBASE - Genric with Edit,Update and Delete</title>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" /> -->
-    <!-- SweetAlert2 CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="assets/css/style.css" />
-  </head>
-  <body>
-
- <div class="container mt-4">
-      <div class="row">
-        <div class="col-md-4 offset-md-4">
-          <form id="userData" class="userData">
-            <div class="form-group">
-              <label for="title">Title</label>
-              <input type="text" id="title" class="form-control" required />
-            </div>
-            <div class="form-group">
-              <label for="body">Content</label>
-              <textarea
-                rows="4"
-                class="form-control"
-                id="body"
-                required
-              ></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="userId">UserId</label>
-              <select class="form-control" id="userId" required>
-                <option value="" disabled selected>Select a User ID</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-            </div>
-
-            <div class="text-right my-3">
-              <button class="btn btn01" id="sBtn" type="submit">Submit</button>
-              <button class="btn btn01 d-none" id="uBtn" type="button">
-                Update
-              </button>
-            </div>
-          </form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Genrator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Table Genrator</h1>
+        <div>
+            <input type="number" id="numberInput" class="text-center">
+            <button id="generateTable" class="btn btn-outline-primary">Generate Table</button>
         </div>
-      </div>
-
-      <div class="loader d-none" id="loader">
-        <div class="spinner-border text-primary" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-      </div>
-
-      <div id="dataContainer" class="row d-flex flex-column-reverse"></div>
+        <div id="tableOutput"></div>
     </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
     <script src="assets/js/app.js"></script>
-  </body>
+</body>
 </html>
-
